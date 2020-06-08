@@ -23,3 +23,27 @@ Front-end and backend to allow users to search, select, or unselect properties f
 - Include a delete button to unselect property from DB.
 - Add a test to your implementation.
 - Include a Readme on how to run your solution.
+
+## Setup
+Setup virtual environment
+```
+python3 -m venv env
+source env/bin/activate
+```
+
+Install dependencies
+```
+pip3 install -r requirements.txt
+```
+
+## Run
+```
+python3 main.py
+```
+
+Open `index.html` to see the frontend.
+
+## Test
+```
+python3 main_test.py
+```

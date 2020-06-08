@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
+    <div id="app">
+        <el-row type="flex" justify="center">
+            <el-col :span="20">
+                <el-autocomplete :debounce="300" class="inline-input" v-model="query" :fetch-suggestions="querySearch"
+                    style="width: 100%" placeholder="Search for address" :trigger-on-focus="false"
+                    @select="handleSelect">
+                </el-autocomplete>
+            </el-col>
+        </el-row>
+
+        <template>
+            <el-table :data="selected" style="width: 100%">
+                <el-table-column prop="Full Address" label="Full Address">
+                </el-table-column>
+                <el-table-column prop="CLASS_DESCRIPTION" label="Class Description">
+                </el-table-column>
+
+                <el-table-column label="Delete" width="100">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row.PIN)">Delete
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
