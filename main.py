@@ -29,7 +29,7 @@ def search_properties():
     query = ' '.join([term + '*' for term in terms])
     with sql.connect('enodo.db') as db:
         db.row_factory = sql.Row
-        results = db.cursor().execute(f'SELECT rowid, `Full Address`, CLASS_DESCRIPTION, SELECTED FROM addresses WHERE PIN IN (SELECT rowid FROM addresses_fts WHERE SELECTED = 0 AND `Full Address` MATCH \'{query}\')').fetchall()
+        results = db.cursor().execute('SELECT rowid, `Full Address`, CLASS_DESCRIPTION, SELECTED FROM addresses WHERE PIN IN (SELECT rowid FROM addresses_fts WHERE SELECTED = 0 AND `Full Address` MATCH ?)', (query,)).fetchall()
         results_json = json.dumps([dict(row) for row in results])
         return Response(results_json, mimetype='application/json', headers={'Access-Control-Allow-Origin': '*'})
 
@@ -40,11 +40,8 @@ def select_property():
     '''
     with sql.connect('enodo.db') as db:
         db = sql.connect('enodo.db')
-        db.executescript(f'''
-            UPDATE addresses
-            SET SELECTED = 1
-            WHERE PIN = {request.args['PIN']}
-        ''')
+        db.execute('UPDATE addresses SET SELECTED = 1 WHERE PIN = ?', (request.args['PIN'],))
+        db.commit()
         return Response(status=200, headers={'Access-Control-Allow-Origin': '*'})
 
 @app.route('/deselectProperty', methods=['POST'])
@@ -54,11 +51,8 @@ def deselect_property():
     '''
     with sql.connect('enodo.db') as db:
         db = sql.connect('enodo.db')
-        db.executescript(f'''
-            UPDATE addresses
-            SET SELECTED = 0
-            WHERE PIN = {request.args['PIN']}
-        ''')
+        db.execute('UPDATE addresses SET SELECTED = 0 WHERE PIN = ?', (request.args['PIN'],))
+        db.commit()
         return Response(status=200, headers={'Access-Control-Allow-Origin': '*'})
 
 def excel_to_db(io, db, sheet_name=None, index=False):
